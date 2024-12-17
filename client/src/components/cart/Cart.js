@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./cart.css";
 import { Divider } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../context/ContextProvider";
 
 const Cart = () => {
   const { id } = useParams("");  // get product id from URL params
+
+  const history =useNavigate("");
 
   const {account,setAccount} = useContext(LoginContext)
   const [inddata, setInddata] = useState(null);  // initialize inddata as null
@@ -38,6 +40,51 @@ const Cart = () => {
   }, [id]);
 
   // Add to cart function
+  // const addtocart = async (id) => {
+  //   try {
+  //     if (!inddata) {
+  //       console.error("Product data is not available.");
+  //       alert("Product data is missing.");
+  //       return;
+  //     }
+
+  //     // Sending only necessary data for adding to the cart
+  //     const checkres = await fetch(`/addtocart/${id}`, {
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         productId: id,  // Pass the product ID
+  //         productDetails: inddata,  // You can pass specific fields if needed
+  //       }),
+  //       credentials: "include",  // Include cookies if needed
+  //     });
+
+  //     // Handle response from the server
+  //     if (checkres.status === 201) {
+  //       const data1 = await checkres.json();
+  //       console.log("Data added to cart:", data1);
+  //       alert("Data added to your cart");
+        
+  //     } else if (checkres.status === 401) {
+  //       console.log("User invalid");
+  //       alert("User invalid");
+        
+  //     } else {
+  //       console.log("Failed to add product to cart");
+  //       alert("Failed to add product to cart");
+        
+
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding to cart:", error);
+  //     alert("An error occurred while adding to your cart");
+      
+  //   }
+  //   setAccount(data1)
+  // };
   const addtocart = async (id) => {
     try {
       if (!inddata) {
@@ -45,7 +92,7 @@ const Cart = () => {
         alert("Product data is missing.");
         return;
       }
-
+  
       // Sending only necessary data for adding to the cart
       const checkres = await fetch(`/addtocart/${id}`, {
         method: "POST",
@@ -59,12 +106,14 @@ const Cart = () => {
         }),
         credentials: "include",  // Include cookies if needed
       });
-
+  
       // Handle response from the server
       if (checkres.status === 201) {
-        const data1 = await checkres.json();
+        const data1 = await checkres.json();  // Define data1 here
         console.log("Data added to cart:", data1);
-        alert("Data added to your cart");
+        // alert("Data added to your cart");
+        history("/buynow")
+        setAccount(data1);  // Now it's safe to use data1
       } else if (checkres.status === 401) {
         console.log("User invalid");
         alert("User invalid");
@@ -77,6 +126,7 @@ const Cart = () => {
       alert("An error occurred while adding to your cart");
     }
   };
+  
 
   return (
     <div className="cart_section">
