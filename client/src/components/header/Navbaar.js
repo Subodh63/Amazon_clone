@@ -5,13 +5,20 @@ import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Avatar from "@mui/material/Avatar";
 import { NavLink } from "react-router-dom";
+import { LoginContext } from "../context/ContextProvider";
 const Navbaar = () => {
+  const { account, setAccount } = useContext(LoginContext);
+  console.log(account);
+
   return (
     <header>
       <nav>
         <div className="left">
           <div className="navlogo">
-            <NavLink to="/"> <img src="./logo.jpg" alt="" /></NavLink> 
+            <NavLink to="/">
+              {" "}
+              <img src="./logo.jpg" alt="" />
+            </NavLink>
           </div>
           <div className="nav_searchbaar">
             <input type="text" name="" id="" />
@@ -25,12 +32,27 @@ const Navbaar = () => {
             <NavLink to="./signin">signin</NavLink>
           </div>
           <div className="cart_btn">
-            <Badge badgeContent={4} color="primary">
+            {account ? (
+              <NavLink to="/buynow">
+                <Badge badgeContent={account.cart.length} color="primary">
+                  <ShoppingCartIcon id="icon" />
+                </Badge>
+              </NavLink>
+            ) : (
+              <NavLink to="/signin">
+                <Badge badgeContent={0} color="primary">
               <ShoppingCartIcon id="icon" />
             </Badge>
+              </NavLink>
+            )}
+
             <p>Cart</p>
           </div>
-          <Avatar className="avtar" />
+          {account ? 
+            <Avatar className="avtar">{account.fname[0].toUpperCase()}</Avatar>
+           : 
+            <Avatar className="avtar"></Avatar>
+          }
         </div>
       </nav>
     </header>
